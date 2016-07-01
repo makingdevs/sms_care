@@ -21,7 +21,7 @@ class AutoResponse
     if message # There's a message in our base of codes?
       message[1] # Return the message
     else
-      """How can you help?  Funding: reply 111 [your msg] Viral: reply 222 [your msg] Community: reply 333 [your msg] Recommend Bar in MxCity: reply 444 [your msg]""" # Put a default message
+      """How can you help?  Funding: reply 111 [advice] Viral: reply 222 [advice] Community: reply 333 [advice] Recommend Bar in MxCity: reply 444 [advice]""" # Put a default message
     end
   end
 
