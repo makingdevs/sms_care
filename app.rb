@@ -30,7 +30,7 @@ def success_response(message)
       "error" => nil
     }
   }
-  unless message.message.scan(/([M|m]ecate)|(\d{3})/).empty? then
+  unless message.message.scan(/([M|m]ecate)/).empty? then
     response["payload"]["task"] = "send"
     response["payload"]["messages"] = [
       {

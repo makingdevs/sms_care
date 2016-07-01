@@ -16,13 +16,14 @@ class AutoResponse
 
   # The method to read the message and find the response
   def respond_to(message)
-    code = message.scan(/\d{3}/).first # Searching the message in the SMS
-    message = @responses.find { |k,v| k == code } # Finding the message
-    if message # There's a message in our base of codes?
-      message[1] # Return the message
-    else
-      """How can you help?  Funding: reply 111 [advice] Viral: reply 222 [advice] Community: reply 333 [advice] Recommend Bar in MxCity: reply 444 [advice]""" # Put a default message
-    end
+    #code = message.scan(/\d{3}/).first # Searching the message in the SMS
+    #message = @responses.find { |k,v| k == code } # Finding the message
+    #if message # There's a message in our base of codes?
+    #  message[1] # Return the message
+    #else
+    #  """How can you help?  Funding: reply 111 [advice] Viral: reply 222 [advice] Community: reply 333 [advice] Recommend Bar in MxCity: reply 444 [advice]""" # Put a default message
+    #end
+    """How can you help?  Funding: reply 111 [advice] Viral: reply 222 [advice] Community: reply 333 [advice] Recommend Bar in MxCity: reply 444 [advice]""" # Put a default message
   end
 
 end
