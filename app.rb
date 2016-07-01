@@ -23,21 +23,25 @@ end
 
 private
 def success_response(message)
-  {
+  response = {
     "payload" =>
     {
       "success" => true,
-      "error" => nil,
-      "task": "send",
-      "messages": [
-        {
-          "to": "#{message.from}",
-          "message": AutoResponse.instance.respond_to(message.message),
-          "uuid": "#{message.message_id}"
-        }
-      ]
+      "error" => nil
     }
   }
+  unless message.message.scan(/([M|m]ecate)|(\d{3})/).empty? then
+    response["task"] = "send"
+    response["messages"] = [
+      {
+        "to": "#{message.from}",
+        "message": AutoResponse.instance.respond_to(message.message),
+        "uuid": "#{message.message_id}"
+      }
+    ]
+  end
+
+  response
 end
 
 def error_response(message)
