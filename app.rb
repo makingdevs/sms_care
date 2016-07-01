@@ -31,8 +31,8 @@ def success_response(message)
     }
   }
   unless message.message.scan(/([M|m]ecate)|(\d{3})/).empty? then
-    response["task"] = "send"
-    response["messages"] = [
+    response["payload"]["task"] = "send"
+    response["payload"]["messages"] = [
       {
         "to": "#{message.from}",
         "message": AutoResponse.instance.respond_to(message.message),
