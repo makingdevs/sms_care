@@ -8,8 +8,8 @@ require 'json'
 
 # Home page
 get '/' do
-  @messages = Message.order(id: :desc).all # Get all the messages
-  erb :index # Showing the index.erb
+  p params
+  respond_message(params["secret"]).to_json
 end
 
 post '/' do # receiving messages from SMSsync
@@ -22,7 +22,29 @@ post '/' do # receiving messages from SMSsync
   end
 end
 
+get '/messages' do
+  @messages = Message.order(id: :desc).all # Get all the messages
+  erb :index # Showing the index.erb
+end
+
+get '/scheduled_message' do
+  erb :scheduled_message # Showing the index.erb
+end
+
 private
+
+def respond_message(secret)
+  {
+    "payload" =>
+    {
+      "secret" => "#{secret}",
+      "task": "send",
+     "messages": [
+                 ]
+    }
+  }
+end
+
 def success_response(message)
   response = {
     "payload" =>
@@ -36,8 +58,8 @@ def success_response(message)
     response["payload"]["messages"] = [
       {
         "to": "#{message.from}",
-        "message": AutoResponse.instance.respond_to(message.message),
-        "uuid": "#{message.message_id}"
+       "message": AutoResponse.instance.respond_to(message.message),
+       "uuid": "#{message.message_id}"
       }
     ]
   end
@@ -52,13 +74,13 @@ def error_response(message)
       "success" => false,
       "error" => "Cannot save the message",
       "task": "send",
-      "messages": [
-        {
-          "to": "#{message.from}",
-          "message": "Try  again",
-          "uuid": "#{message.message_id}"
-        }
-      ]
+     "messages": [
+                   {
+                     "to": "#{message.from}",
+                    "message": "Try  again",
+                    "uuid": "#{message.message_id}"
+                   }
+                 ]
     }
   }
 end
