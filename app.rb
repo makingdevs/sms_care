@@ -1,4 +1,5 @@
 require 'sinatra'
+require "sinatra/reloader" if development?
 require 'sinatra/activerecord'
 require './config/environments' #database configuration
 require './models/message'
