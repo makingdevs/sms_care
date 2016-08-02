@@ -27,8 +27,13 @@ get '/messages' do
   erb :index # Showing the index.erb
 end
 
-get '/scheduled_message' do
+get '/scheduled_message/new' do
   erb :scheduled_message # Showing the index.erb
+end
+
+post '/scheduled_message/save' do
+  p params
+  redirect to('/scheduled_message/new')
 end
 
 private
