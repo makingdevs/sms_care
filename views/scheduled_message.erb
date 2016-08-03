@@ -25,19 +25,19 @@
               <div class="row">
                 <div class="input-field col s6">
                   <i class="material-icons prefix">phone</i>
-                  <input name="telephone" type="tel" class="validate">
+                  <input name="phone_number" type="tel" class="validate">
                   <label for="icon_telephone">Telephone</label>
                 </div>
                 <div class="input-field col s6">
                   <i class="material-icons prefix">date_range</i>
-                  <label for="icon_telephone">Date</label>
-                  <input type="date" class="datepicker" name="date">
+                  <label for="scheduled_date">Date</label>
+                  <input type="date" class="datepicker" name="scheduled_date">
                 </div>
               </div>
               <div class="row">
                 <div class="input-field col s12">
                   <i class="material-icons prefix">mode_edit</i>
-                  <textarea name="message" class="materialize-textarea" length="120"></textarea>
+                  <textarea name="body" class="materialize-textarea" length="120"></textarea>
                   <label for="icon_prefix2">Type your message:</label>
                 </div>
               </div>
@@ -65,7 +65,10 @@
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/js/materialize.min.js"></script>
     <script>
-     $('.datepicker').pickadate({});
+     $('.datepicker').pickadate({
+       format: 'd mmmm, yyyy',
+       formatSubmit: 'd-mm-yyyy'
+     });
     </script>
 
   </body>
