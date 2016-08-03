@@ -3,12 +3,12 @@ require "sinatra/reloader" if development?
 require 'sinatra/activerecord'
 require './config/environments' #database configuration
 require './models/message'
+require './models/scheduled_message'
 require './lib/auto_response'
 require 'json'
+require 'date'
 
-# Home page
 get '/' do
-  p params
   respond_message(params["secret"]).to_json
 end
 
@@ -22,6 +22,7 @@ post '/' do # receiving messages from SMSsync
   end
 end
 
+# Message page
 get '/messages' do
   @messages = Message.order(id: :desc).all # Get all the messages
   erb :index # Showing the index.erb
@@ -32,8 +33,17 @@ get '/scheduled_message/new' do
 end
 
 post '/scheduled_message/save' do
-  p params
-  redirect to('/scheduled_message/new')
+  scheduled_message = prepare_scheduled_message(params)
+  if scheduled_message.save
+    redirect to('/scheduled_message/list')
+  else
+    redirect to('/scheduled_message/new')
+  end
+end
+
+get '/scheduled_message/list' do
+  @scheduled_messages = ScheduledMessage.order(id: :desc).all
+  erb :scheduled_message_list
 end
 
 private
@@ -90,3 +100,11 @@ def error_response(message)
   }
 end
 
+def prepare_scheduled_message(params)
+  ScheduledMessage.new(
+    "body" => params["body"],
+    "phone_number" => params["phone_number"],
+    "scheduled_date" => Date.parse(params["scheduled_date_submit"]),
+    "status" => "pending"
+  )
+end
