@@ -25,15 +25,12 @@ ActiveRecord::Schema.define(version: 20160803171849) do
     t.string "device_id"
   end
 
-  create_table "models", force: :cascade do |t|
-    t.string "name"
-  end
-
   create_table "scheduled_messages", force: :cascade do |t|
     t.string   "body",           limit: 140
     t.string   "status",         limit: 50
     t.string   "phone_number",   limit: 15
     t.datetime "scheduled_date"
+    t.string   "uuid",           limit: 40
   end
 
 end
