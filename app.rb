@@ -7,6 +7,7 @@ require './models/scheduled_message'
 require './lib/auto_response'
 require 'json'
 require 'date'
+require 'securerandom'
 
 get '/' do
   respond_message(params["secret"]).to_json
@@ -105,6 +106,7 @@ def prepare_scheduled_message(params)
     "body" => params["body"],
     "phone_number" => params["phone_number"],
     "scheduled_date" => Date.parse(params["scheduled_date_submit"]),
-    "status" => "pending"
+    "status" => "pending",
+    "uuid" => SecureRandom.uuid
   )
 end

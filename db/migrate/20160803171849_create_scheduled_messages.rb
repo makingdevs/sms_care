@@ -5,6 +5,7 @@ class CreateScheduledMessages < ActiveRecord::Migration
       t.column :status, :string, limit: 50
       t.column :phone_number, :string, limit: 15
       t.column :scheduled_date, :datetime
+      t.column :uuid, :string, limit: 40
     end
   end
 end
