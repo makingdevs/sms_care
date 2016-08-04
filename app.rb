@@ -5,14 +5,14 @@ require './config/environments' #database configuration
 require './models/message'
 require './models/scheduled_message'
 require './lib/auto_response'
+require './lib/schedule_messages_manager'
 require 'json'
-require 'date'
 require 'securerandom'
 
 get '/' do
   respond = case params["task"]
             when "send"
-              respond_message(params["secret"])
+              ScheduleMessagesManager.instance.retrieve_scheduled_messages(params["secret"])
             when "result"
               @scheduled_messages = ScheduledMessage.order(id: :desc).all
               {"message_uuids" => (@scheduled_messages.map { |m| m.uuid }) }
@@ -54,7 +54,7 @@ get '/scheduled_message/new' do
 end
 
 post '/scheduled_message/save' do
-  scheduled_message = ScheduledMessagesManager.instance.create_message(params)
+  scheduled_message = ScheduleMessagesManager.instance.create_message(params)
   if scheduled_message.save
     redirect to('/scheduled_message/list')
   else
@@ -68,26 +68,6 @@ get '/scheduled_message/list' do
 end
 
 private
-
-def respond_message(secret)
-  # TODO: Retrieve the scheduled messages
-  @scheduled_messages = ScheduledMessage.order(id: :desc).all
-  messages = @scheduled_messages.map do |m|
-    {
-      "to" => m.phone_number,
-      "message" => m.body,
-      "uuid" => m.uuid,
-    }
-  end
-  {
-    "payload" =>
-    {
-      "secret" => "#{secret}",
-      "task": "send",
-     "messages": messages
-    }
-  }
-end
 
 def success_response(message)
   response = {

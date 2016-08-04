@@ -1,4 +1,5 @@
 require 'singleton'
+require 'date'
 require './models/scheduled_message'
 
 class ScheduleMessagesManager
@@ -7,7 +8,24 @@ class ScheduleMessagesManager
   def initialize
   end
 
-  def retrieve_scheduled_messages
+  def retrieve_scheduled_messages(secret)
+    scheduled_messages = ScheduledMessage.order(id: :desc).all
+    p scheduled_messages
+    messages = scheduled_messages.map do |m|
+      {
+        "to" => m.phone_number,
+        "message" => m.body,
+        "uuid" => m.uuid,
+      }
+    end
+    {
+      "payload" =>
+      {
+        "secret" => "#{secret}",
+        "task": "send",
+       "messages": messages
+      }
+    }
   end
 
   def confirm_scheduled_messages
