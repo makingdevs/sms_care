@@ -10,18 +10,42 @@ require 'date'
 require 'securerandom'
 
 get '/' do
-  content_type :json 
-  respond_message(params["secret"]).to_json
+  puts "****************GET / **************"
+  respond = case params["task"]
+            when "send"
+              respond_message(params["secret"])
+            when "result"
+              @scheduled_messages = ScheduledMessage.order(id: :desc).all
+              {"message_uuids" => (@scheduled_messages.map { |m| m.uuid }) }
+            else
+              "no task defined"
+            end
+  content_type :json
+  p respond
+  respond.to_json
 end
 
 post '/' do # receiving messages from SMSsync
-  message = Message.new(params) # Creating an object
+  puts "****************POST / **************"
+  p params
   content_type :json # Preparing the response
-  if message.save
-    success_response(message).to_json # Send a success message
-  else
-    error_response(message).to_json # Senad an error message
-  end
+  respond = case params[:task]
+            when "sent"
+              @scheduled_messages = ScheduledMessage.order(id: :desc).all
+              {"message_uuids" => (@scheduled_messages.map { |m| m.uuid }) }
+            when "result"
+              @scheduled_messages = ScheduledMessage.order(id: :desc).all
+              {"message_uuids" => (@scheduled_messages.map { |m| m.uuid }) }
+            else
+              message = Message.new(params) # Creating an object
+              if message.save
+                success_response(message) # Send a success message
+              else
+                error_response(message) # Senad an error message
+              end
+            end
+  p respond
+  respond.to_json
 end
 
 # Message page
@@ -99,7 +123,7 @@ def error_response(message)
       "success" => false,
       "error" => "Cannot save the message",
       "task": "send",
-      "messages": [
+     "messages": [
                    {
                      "to": "#{message.from}",
                     "message": "Try  again",
