@@ -10,6 +10,7 @@ require 'date'
 require 'securerandom'
 
 get '/' do
+  content_type :json 
   respond_message(params["secret"]).to_json
 end
 
@@ -50,13 +51,21 @@ end
 private
 
 def respond_message(secret)
+  # TODO: Retrieve the scheduled messages
+  @scheduled_messages = ScheduledMessage.order(id: :desc).all
+  messages = @scheduled_messages.map do |m|
+    {
+      "to" => m.phone_number,
+      "message" => m.body,
+      "uuid" => m.uuid,
+    }
+  end
   {
     "payload" =>
     {
       "secret" => "#{secret}",
       "task": "send",
-     "messages": [
-                 ]
+     "messages": messages
     }
   }
 end
@@ -90,7 +99,7 @@ def error_response(message)
       "success" => false,
       "error" => "Cannot save the message",
       "task": "send",
-     "messages": [
+      "messages": [
                    {
                      "to": "#{message.from}",
                     "message": "Try  again",
