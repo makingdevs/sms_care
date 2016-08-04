@@ -10,7 +10,6 @@ require 'date'
 require 'securerandom'
 
 get '/' do
-  puts "****************GET / **************"
   respond = case params["task"]
             when "send"
               respond_message(params["secret"])
@@ -21,13 +20,10 @@ get '/' do
               "no task defined"
             end
   content_type :json
-  p respond
   respond.to_json
 end
 
 post '/' do # receiving messages from SMSsync
-  puts "****************POST / **************"
-  p params
   content_type :json # Preparing the response
   respond = case params[:task]
             when "sent"
@@ -44,7 +40,6 @@ post '/' do # receiving messages from SMSsync
                 error_response(message) # Senad an error message
               end
             end
-  p respond
   respond.to_json
 end
 
@@ -59,7 +54,7 @@ get '/scheduled_message/new' do
 end
 
 post '/scheduled_message/save' do
-  scheduled_message = prepare_scheduled_message(params)
+  scheduled_message = ScheduledMessagesManager.instance.create_message(params)
   if scheduled_message.save
     redirect to('/scheduled_message/list')
   else
@@ -132,14 +127,4 @@ def error_response(message)
                  ]
     }
   }
-end
-
-def prepare_scheduled_message(params)
-  ScheduledMessage.new(
-    "body" => params["body"],
-    "phone_number" => params["phone_number"],
-    "scheduled_date" => Date.parse(params["scheduled_date_submit"]),
-    "status" => "pending",
-    "uuid" => SecureRandom.uuid
-  )
 end
