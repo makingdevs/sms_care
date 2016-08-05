@@ -9,8 +9,9 @@ class ScheduleMessagesManager
   end
 
   def retrieve_scheduled_messages(secret)
-    scheduled_messages = ScheduledMessage.order(id: :desc).all
-    p scheduled_messages
+    scheduled_messages = ScheduledMessage.where(
+      scheduled_date: (Time.now.midnight - 1.day)..Time.now.midnight,
+      status: "pending")
     messages = scheduled_messages.map do |m|
       {
         "to" => m.phone_number,
