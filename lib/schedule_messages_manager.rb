@@ -9,6 +9,7 @@ class ScheduleMessagesManager
   end
 
   def retrieve_scheduled_messages(secret)
+    # TODO: Validate the secret
     scheduled_messages = ScheduledMessage.where(
       scheduled_date: (Time.now.midnight - 1.day)..Time.now.midnight,
       status: "pending")

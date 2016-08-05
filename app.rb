@@ -17,7 +17,7 @@ get '/' do
               @scheduled_messages = ScheduledMessage.order(id: :desc).all
               {"message_uuids" => (@scheduled_messages.map { |m| m.uuid }) }
             else
-              "no task defined"
+              { "payload" => {"success" => true, "error" => nil} }
             end
   content_type :json
   respond.to_json
@@ -29,9 +29,10 @@ post '/' do # receiving messages from SMSsync
             when "sent"
               scheduled_messages = ScheduleMessagesManager.instance.confirm_scheduled_messages
               {"message_uuids" => (scheduled_messages.map { |m| m.uuid }) }
-            # when "result"
-            #   scheduled_messages = ScheduledMessage.order(id: :desc).all
-            #   {"message_uuids" => (scheduled_messages.map { |m| m.uuid }) }
+            when "result"
+              p params
+              @scheduled_messages = ScheduledMessage.where(status: "queued")
+              {"message_uuids" => (@scheduled_messages.map { |m| m.uuid }) }
             else
               message = Message.new(params) # Creating an object
               if message.save
