@@ -30,6 +30,16 @@ class ScheduleMessagesManager
   end
 
   def confirm_scheduled_messages
+    scheduled_messages = ScheduledMessage.where(
+      scheduled_date: (Time.now.midnight - 1.day)..Time.now.midnight,
+      status: "pending")
+    scheduled_messages.each do |m|
+      m.status = "queued"
+    end
+    ScheduledMessage.transaction do
+      scheduled_messages.each(&:save!)
+    end
+    scheduled_messages
   end
 
   def create_message(params)
