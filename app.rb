@@ -27,11 +27,11 @@ post '/' do # receiving messages from SMSsync
   content_type :json # Preparing the response
   respond = case params[:task]
             when "sent"
-              @scheduled_messages = ScheduledMessage.order(id: :desc).all
-              {"message_uuids" => (@scheduled_messages.map { |m| m.uuid }) }
-            when "result"
-              @scheduled_messages = ScheduledMessage.order(id: :desc).all
-              {"message_uuids" => (@scheduled_messages.map { |m| m.uuid }) }
+              scheduled_messages = ScheduleMessagesManager.instance.confirm_scheduled_messages
+              {"message_uuids" => (scheduled_messages.map { |m| m.uuid }) }
+            # when "result"
+            #   scheduled_messages = ScheduledMessage.order(id: :desc).all
+            #   {"message_uuids" => (scheduled_messages.map { |m| m.uuid }) }
             else
               message = Message.new(params) # Creating an object
               if message.save
