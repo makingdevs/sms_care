@@ -13,10 +13,10 @@ The current software is in beta versión, and just has a few features:
 - Respond the message with another custom message, provided by the _intelligence_(a simple text file with messages codes).
 - Have a list of custom messages based on codes.
 - Show the list of the received messages.
+- Schedule the send of messages
 
 The next features are:
 
-- Schedule the send of messages
 - Have a history of an entire conversation
 
 So, for more information about the use and the contribution, please read the Wiki.
